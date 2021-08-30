@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Input } from "antd";
-import { Link, withRouter, useHistory, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { MenuItems } from "./components";
 import { Viewer } from "../../lib/types";
 

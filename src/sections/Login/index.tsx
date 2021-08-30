@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 import { useApolloClient, useMutation } from "@apollo/client";
 import { Card, Layout, Spin, Typography } from "antd";
 import { ErrorBanner } from "../../lib/components";
@@ -38,12 +38,16 @@ export const Login = ({ setViewer }: Props) => {
           displaySuccessNotification("You've successfully logged in", "");
         }
       },
+      onError: () => {}, // necessary for test to pass
     });
   const logInRef = useRef(logIn);
 
-  useEffect(() => {
-    const code = new URL(window.location.href).searchParams.get("code");
+  const location = useLocation();
 
+  useEffect(() => {
+    // const code = new URL(window.location.href).searchParams.get("code");
+    const searchParams = new URLSearchParams(location.search);
+    const code = searchParams.get("code");
     if (code) {
       logInRef.current({
         variables: {
@@ -61,10 +65,11 @@ export const Login = ({ setViewer }: Props) => {
         query: AUTH_URL,
       });
 
-      window.location.href = data.authUrl;
+      // window.location.href = data.authUrl;
+      window.location.assign(data.authUrl);
     } catch (error) {
       displayErrorMessage(
-        "Sorry we weren't able to log you in. Please try again later.I"
+        "Sorry we weren't able to log you in. Please try again later!"
       );
     }
   };
@@ -83,7 +88,7 @@ export const Login = ({ setViewer }: Props) => {
   }
 
   const logInErrorBannerElement = logInError ? (
-    <ErrorBanner description="Sorry! We weren't able to log you in. Please contact me at another." />
+    <ErrorBanner description="Sorry! We weren't able to log you in. Please try again later!" />
   ) : null;
 
   return (
